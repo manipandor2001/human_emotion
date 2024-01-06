@@ -19,3 +19,8 @@ import albumentations as A
 import tensorflow_datasets as tfds
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Layer
+
+from tensorflow.keras.layers import (GlobalAveragePooling2D, Activation, MaxPooling2D, Add, Conv2D, MaxPool2D, Dense,
+                                     Flatten, InputLayer, BatchNormalization, Input, Embedding, Permute,
+                                     Dropout, RandomFlip, RandomRotation, LayerNormalization, MultiHeadAttention,
+                                     RandomContrast, Rescaling, Resizing, Reshape, LeakyReLU)
