@@ -24,6 +24,31 @@ from tensorflow.keras.layers import (GlobalAveragePooling2D, Activation, MaxPool
                                      Flatten, InputLayer, BatchNormalization, Input, Embedding, Permute,
                                      Dropout, RandomFlip, RandomRotation, LayerNormalization, MultiHeadAttention,
                                      RandomContrast, Rescaling, Resizing, Reshape, LeakyReLU)
+#to read xml file
+
+def preprocess_xml(filename):
+  tree = ET.parse(filename)
+  root = tree.getroot()
+  size_tree = root.find('size')
+  height = float(size_tree.find('height').text)
+  width = float(size_tree.find('width').text)
+  bounding_boxes=[]
+  for object_tree in root.findall('object'):
+    for bounding_box in object_tree.iter('bndbox'):
+      xmin = (float(bounding_box.find('xmin').text))
+      ymin = (float(bounding_box.find('ymin').text))
+      xmax = (float(bounding_box.find('xmax').text))
+      ymax = (float(bounding_box.find('ymax').text))
+      break
+    class_name = object_tree.find('name').text
+    class_dict={classes[i]:i for i in range(len(classes))}
+    bounding_box = [
+        (xmin+xmax)/(2*width),(ymin+ymax)/(2*height),(xmax-xmin)/width,
+        (ymax-ymin)/height,class_dict[class_name]]
+    bounding_boxes.append(bounding_box)
+  return tf.convert_to_tensor(bounding_boxes)
+
+
 
 def yolo_loss(y_true, y_pred):
   target = y_true[...,0]
